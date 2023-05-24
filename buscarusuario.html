@@ -1,0 +1,40 @@
+<input type="text" id="input_nome">
+<button onclick="buscar()">Buscar</button>
+<div id="foto"></div>
+<div id="repositorios"></div>
+<div id="seguidores"></div>
+<script>
+    function buscar() {
+        var user = input_nome.value
+        fetch(`https://api.github.com/users/${user}`).then(function(resposta) {
+            resposta.json().then((json)=>{
+                console.log(json)
+                buscarSeguidores(user)
+                buscarRepositorios(user)
+                foto.innerHTML  = `<img src='${json.avatar_url}'>`
+            })
+        })
+    }
+    function buscarSeguidores(user) {
+        seguidores.innerHTML = ''
+        fetch(`https://api.github.com/users/${user}/followers`).then(function(resposta) {
+            resposta.json().then((json)=>{
+                for(var i = 0; i < json.length; i++){
+                    seguidores.innerHTML  += `<img src='${json[i].avatar_url}'><br>`
+                }
+                console.log(json)
+            })
+        })
+    }   
+    function buscarRepositorios(user) {
+        repositorios.innerHTML = ''
+        fetch(`https://api.github.com/users/${user}/repos`).then(function(resposta) {
+            resposta.json().then((json)=>{
+                for(var i = 0; i < json.length; i++){
+                    repositorios.innerHTML  += `<p>${json[i].name}</p>`
+                }
+                console.log(json)
+            })
+        })
+    }
+</script>
